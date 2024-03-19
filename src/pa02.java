@@ -32,14 +32,15 @@ public class pa02 {
             return;
         }
 
+        String inputFile = args[0];
+        int checksumSize = Integer.parseInt(args[1]); // checksum size in bits
+
         // If checksum sizes are not 8, 16, or 32 bits
-        if (args[1] != "8" && args[1] != "16" && args[1] != "32") {
+        if (checksumSize != 8 && checksumSize != 16 && checksumSize != 32) {
             System.err.println("Valid checksum sizes are 8, 16, or 32\n");
             return;
         }
 
-        String inputFile = args[0];
-        int checksumSize = Integer.parseInt(args[1]); // checksum size in bits
 
         // Read in input file
         String inputText = readInputFile(inputFile, checksumSize);
@@ -69,6 +70,7 @@ public class pa02 {
         text = new StringBuilder(text.toString());
 
         // Pad with 'X' to match the checksum size for the checksum calculation
+        // Print padding on the next
         while (text.length() % (checksumSize / 8) != 0) {
             text.append('X');
         }
@@ -102,6 +104,7 @@ public class pa02 {
             }
             System.out.print(inputText.charAt(i));
         }
+        System.out.println();
     }
 }
 
