@@ -42,7 +42,7 @@ public class pa02 {
             System.exit(1);
         }
 
-        // Read in the checksum size and see if it's a valid integer
+        // Read in the checksum size and check if it's a valid integer
         int checkSumSize;
         try {
             checkSumSize = Integer.parseInt(args[1]);
@@ -70,15 +70,16 @@ public class pa02 {
         // Calculate the checksum and print the output
         byte[] adjustedBytes = getAdjustedByteArray(input, checkSumSize);
         int checksum = checksum(adjustedBytes, checkSumSize);
+        
         System.out.printf("\n%s\n%2d bit checksum is %8x for all %4d chars", formattedStringOutput(getAdjustedString(input, checkSumSize)), checkSumSize, checksum, adjustedBytes.length);
-
     }
 
     // Get the adjusted byte array based on the checksum size
     private static byte[] getAdjustedByteArray(String in, int bit) {
-        int originalSize = in.getBytes().length, padding = getPadding(originalSize, bit), newSize;
+        int originalSize = in.getBytes().length;
+        int padding = getPadding(originalSize, bit);
+        int newSize = originalSize + padding;;
 
-        newSize = originalSize + padding;
         byte[] temp = new byte[newSize];
 
         for (int i = 0; i < originalSize; i++) {
@@ -115,7 +116,6 @@ public class pa02 {
         for (byte b : data) {
             check += b;
         }
-
         return check & 0xFF;
     }
 
@@ -126,7 +126,6 @@ public class pa02 {
         for (int i = 0; i <= data.length - 2; i += 2) {
             check += ((data[i] << 8) | (data[i + 1] & 0xFF));
         }
-
         return check & 0xFFFF;
     }
 
@@ -137,13 +136,13 @@ public class pa02 {
         for (int i = 0; i < data.length; i += 4) {
             check += ((data[i] << 24) | (data[i + 1] << 16) | (data[i + 2] << 8) | (data[i + 3])) & 0xffffffffL;
         }
-
         return check;
     }
 
     // Format the output string to 80 characters per line
     private static String formattedStringOutput(String output) {
         StringBuilder res = new StringBuilder();
+
         for (int i = 0; i < output.length(); i++) {
             if (i > 0 && i % 80 == 0) {
                 res.append("\n");
@@ -155,10 +154,11 @@ public class pa02 {
 
     // Pad the input string with 'X' to match the checksum size
     private static String getAdjustedString(String in, int bit) {
-        int originalSize = in.getBytes().length, padding = getPadding(originalSize, bit), newSize;
+        int originalSize = in.getBytes().length;
+        int padding = getPadding(originalSize, bit);
+        int newSize = originalSize + padding;
         StringBuilder builder = new StringBuilder();
-        newSize = originalSize + padding;
-
+        
         for (int i = 0; i < originalSize; i++) {
             builder.append(in.charAt(i));
         }
@@ -168,7 +168,6 @@ public class pa02 {
                 builder.append("X");
             }
         }
-
         return builder.toString();
     }
 
@@ -177,6 +176,7 @@ public class pa02 {
         int length = lengthOriginal;
         int modulus = bit == 32 ? 4 : 2;
         int result = 0;
+
         while (length % modulus != 0) {
             length = length + 1;
             result++;
